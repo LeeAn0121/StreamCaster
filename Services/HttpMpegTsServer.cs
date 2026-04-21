@@ -28,6 +28,8 @@ public sealed class HttpMpegTsServer : IDisposable
 
     public event Action<HttpClientStatus>? ClientStatusChanged;
 
+    public event Action<long>? BytesTransferred;
+
     public async Task RunAsync(string executablePath, string ffmpegArguments, string targetAddress, CancellationToken cancellationToken)
     {
         var endpoint = ParseEndpoint(targetAddress);
@@ -344,6 +346,8 @@ public sealed class HttpMpegTsServer : IDisposable
                 {
                     await client.Stream.WriteAsync(chunk, cancellationToken);
                     await client.Stream.FlushAsync(cancellationToken);
+                    client.TotalBytesSent += chunk.Length;
+                    BytesTransferred?.Invoke(chunk.Length);
                 }
                 finally
                 {
@@ -693,6 +697,7 @@ public sealed class HttpMpegTsServer : IDisposable
         public Stream Stream { get; } = stream;
         public string? RemoteEndPoint { get; } = remoteEndPoint;
         public string Path { get; } = path;
+        public long TotalBytesSent { get; set; }
         public SemaphoreSlim WriteLock { get; } = new(1, 1);
         public TaskCompletionSource Closed { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
     }

@@ -49,6 +49,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
     private Task _sessionLoopTask = Task.CompletedTask;
     private StreamWriter? _logWriter;
     private readonly object _logWriterLock = new();
+    private long _sessionBytesSent;
 
     public MainWindow()
     {
@@ -63,6 +64,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         _httpServer.LogReceived += OnLogReceived;
         _httpServer.StatusChanged += OnHttpServerStatusChanged;
         _httpServer.ClientStatusChanged += OnHttpClientStatusChanged;
+        _httpServer.BytesTransferred += OnHttpBytesTransferred;
 
         DetectFfmpeg();
         RefreshNetworkInterfaces();
@@ -295,6 +297,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         _logBuffer.Clear();
         _logEntries.Clear();
         StartNewLogSession();
+        _sessionBytesSent = 0;
         SetSessionLocked(true);
         Stats = new StreamingStats { Status = "Starting", PacketSize = PacketSize };
         OnPropertyChanged(nameof(Stats));
@@ -758,6 +761,17 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         });
     }
 
+    private void OnHttpBytesTransferred(long bytes)
+    {
+        Dispatcher.Invoke(() =>
+        {
+            _sessionBytesSent += bytes;
+            Stats.BytesSent = FormatBytes(_sessionBytesSent);
+            OnPropertyChanged(nameof(Stats));
+            UpdateStatusSummary();
+        });
+    }
+
     private void ParseStats(string line)
     {
         var sizeMatch = SizeRegex.Match(line);
@@ -926,6 +940,17 @@ public partial class MainWindow : Window, INotifyPropertyChanged
             >= 1024d * 1024d => $"{bytes / (1024d * 1024d):F1} MB",
             >= 1024d => $"{bytes / 1024d:F1} kB",
             _ => $"{bytes:F0} B",
+        };
+    }
+
+    private static string FormatBytes(long bytes)
+    {
+        return bytes switch
+        {
+            >= 1024L * 1024L * 1024L => $"{bytes / (1024d * 1024d * 1024d):F1} GB",
+            >= 1024L * 1024L => $"{bytes / (1024d * 1024d):F1} MB",
+            >= 1024L => $"{bytes / 1024d:F1} kB",
+            _ => $"{bytes} B",
         };
     }
 
