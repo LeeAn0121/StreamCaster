@@ -114,39 +114,31 @@
                 <ColumnDefinition Width="1*" />
                 <ColumnDefinition Width="1*" />
                 <ColumnDefinition Width="1*" />
-                <ColumnDefinition Width="1.1*" />
                 <ColumnDefinition Width="1.5*" />
             </Grid.ColumnDefinitions>
 
             <Border Grid.Column="0" Margin="0,0,8,0" Padding="12,10" CornerRadius="10"
                     Background="{Binding PanelBrushColor}" BorderBrush="{Binding BorderBrushColor}" BorderThickness="1">
                 <StackPanel>
-                    <TextBlock Foreground="{Binding SecondaryTextBrush}" FontSize="10" FontWeight="SemiBold" Text="STATUS" />
-                    <TextBlock Margin="0,4,0,0" FontSize="16" FontWeight="Bold" Text="{Binding Stats.Status}" />
-                </StackPanel>
-            </Border>
-            <Border Grid.Column="1" Margin="0,0,8,0" Padding="12,10" CornerRadius="10"
-                    Background="{Binding PanelBrushColor}" BorderBrush="{Binding BorderBrushColor}" BorderThickness="1">
-                <StackPanel>
                     <TextBlock Foreground="{Binding SecondaryTextBrush}" FontSize="10" FontWeight="SemiBold" Text="BITRATE" />
                     <TextBlock Margin="0,4,0,0" FontSize="16" FontWeight="Bold" Text="{Binding Stats.Bitrate}" />
                 </StackPanel>
             </Border>
-            <Border Grid.Column="2" Margin="0,0,8,0" Padding="12,10" CornerRadius="10"
+            <Border Grid.Column="1" Margin="0,0,8,0" Padding="12,10" CornerRadius="10"
                     Background="{Binding PanelBrushColor}" BorderBrush="{Binding BorderBrushColor}" BorderThickness="1">
                 <StackPanel>
                     <TextBlock Foreground="{Binding SecondaryTextBrush}" FontSize="10" FontWeight="SemiBold" Text="BYTES SENT" />
                     <TextBlock Margin="0,4,0,0" FontSize="16" FontWeight="Bold" Text="{Binding Stats.BytesSent}" />
                 </StackPanel>
             </Border>
-            <Border Grid.Column="3" Margin="0,0,8,0" Padding="12,10" CornerRadius="10"
+            <Border Grid.Column="2" Margin="0,0,8,0" Padding="12,10" CornerRadius="10"
                     Background="{Binding PanelBrushColor}" BorderBrush="{Binding BorderBrushColor}" BorderThickness="1">
                 <StackPanel>
                     <TextBlock Foreground="{Binding SecondaryTextBrush}" FontSize="10" FontWeight="SemiBold" Text="HTTP CLIENTS" />
                     <TextBlock Margin="0,4,0,0" FontSize="16" FontWeight="Bold" Text="{Binding HttpClientSummary}" />
                 </StackPanel>
             </Border>
-            <Border Grid.Column="4" Padding="12,10" CornerRadius="10"
+            <Border Grid.Column="3" Padding="12,10" CornerRadius="10"
                     Background="{Binding PanelBrushColor}" BorderBrush="{Binding BorderBrushColor}" BorderThickness="1">
                 <StackPanel>
                     <TextBlock Foreground="{Binding SecondaryTextBrush}" FontSize="10" FontWeight="SemiBold" Text="CURRENT TARGET" />
@@ -165,7 +157,12 @@
                 BorderThickness="1">
             <StackPanel>
                 <TextBlock Style="{StaticResource SectionTitleStyle}" Text="Control" />
+                <TextBlock Margin="0,6,0,0"
+                           Foreground="{Binding SecondaryTextBrush}"
+                           FontSize="11"
+                           Text="{Binding EditLockStatusText}" />
 
+                <StackPanel IsEnabled="{Binding CanEditSettings}">
                 <!-- Input -->
                 <TextBlock Margin="0,12,0,5" Style="{StaticResource FieldLabelStyle}" Text="INPUT FILE" />
                 <Grid>
@@ -219,7 +216,6 @@
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="100" />
                         <ColumnDefinition Width="100" />
-                        <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
                     <StackPanel Grid.Column="0" Margin="0,0,12,0">
@@ -238,14 +234,16 @@
                         <TextBox HorizontalContentAlignment="Center"
                                  Text="{Binding Ttl, UpdateSourceTrigger=PropertyChanged}" />
                     </StackPanel>
-
-                    <StackPanel Grid.Column="3" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,16,0,0">
-                        <Button Margin="0,0,8,0" Content="Start"
-                                Style="{StaticResource PrimaryButtonStyle}" Click="Start_Click" />
-                        <Button Content="Stop"
-                                Style="{StaticResource SecondaryButtonStyle}" Click="Stop_Click" />
-                    </StackPanel>
                 </Grid>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,16,0,0">
+                    <Button Content="{Binding ToggleSessionButtonText}"
+                            Click="ToggleSession_Click"
+                            Style="{StaticResource PrimaryButtonStyle}"
+                            Background="{Binding ToggleSessionButtonBackground}"
+                            Foreground="{Binding ToggleSessionButtonForeground}" />
+                </StackPanel>
             </StackPanel>
         </Border>
 

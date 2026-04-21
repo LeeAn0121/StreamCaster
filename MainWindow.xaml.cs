@@ -40,6 +40,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
     private string _httpClientSummary = "0";
     private string _logFileStatus = "Log file: not started";
     private string _currentLogFilePath = string.Empty;
+    private bool _isSessionLocked;
     private string _ffmpegExecutablePath = "ffmpeg";
     private string _ffmpegStatusText = "FFmpeg: 확인 중";
     private NetworkInterfaceOption? _selectedNetworkInterface;
@@ -197,6 +198,22 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         set => SetField(ref _ffmpegStatusText, value);
     }
 
+    public bool CanEditSettings => !_isSessionLocked;
+
+    public string ToggleSessionButtonText => _isSessionLocked ? "Stop Streaming" : "Start Streaming";
+
+    public Brush ToggleSessionButtonBackground => _isSessionLocked ? CreateBrush("#DC2626") : AccentBrushColor;
+
+    public Brush ToggleSessionButtonForeground => AccentTextBrush;
+
+    public string SessionStateText => _isSessionLocked ? "RUNNING" : "STOPPED";
+
+    public Brush SessionStateBadgeBrush => _isSessionLocked ? CreateBrush("#16A34A") : CreateBrush("#64748B");
+
+    public string EditLockStatusText => _isSessionLocked
+        ? "Streaming is active. Settings are locked until stop."
+        : "Settings can be edited while streaming is stopped.";
+
     public StreamProtocol SelectedProtocol
     {
         get => _selectedProtocol;
@@ -278,6 +295,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         _logBuffer.Clear();
         _logEntries.Clear();
         StartNewLogSession();
+        SetSessionLocked(true);
         Stats = new StreamingStats { Status = "Starting", PacketSize = PacketSize };
         OnPropertyChanged(nameof(Stats));
         UpdateStatusSummary();
@@ -350,6 +368,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 
             Dispatcher.Invoke(() =>
             {
+                SetSessionLocked(false);
                 Stats.Status = "Stopped";
                 OnPropertyChanged(nameof(Stats));
                 UpdateStatusSummary();
@@ -396,6 +415,17 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         _sessionCts = null;
         cts?.Cancel();
         // StopAsync는 루프의 finally에서 처리됨
+    }
+
+    private void ToggleSession_Click(object sender, RoutedEventArgs e)
+    {
+        if (_isSessionLocked)
+        {
+            Stop_Click(sender, e);
+            return;
+        }
+
+        Start_Click(sender, e);
     }
 
     private void BrowseInput_Click(object sender, RoutedEventArgs e)
@@ -858,6 +888,23 @@ public partial class MainWindow : Window, INotifyPropertyChanged
             _logWriter?.Dispose();
             _logWriter = null;
         }
+    }
+
+    private void SetSessionLocked(bool value)
+    {
+        if (_isSessionLocked == value)
+        {
+            return;
+        }
+
+        _isSessionLocked = value;
+        OnPropertyChanged(nameof(CanEditSettings));
+        OnPropertyChanged(nameof(ToggleSessionButtonText));
+        OnPropertyChanged(nameof(ToggleSessionButtonBackground));
+        OnPropertyChanged(nameof(ToggleSessionButtonForeground));
+        OnPropertyChanged(nameof(SessionStateText));
+        OnPropertyChanged(nameof(SessionStateBadgeBrush));
+        OnPropertyChanged(nameof(EditLockStatusText));
     }
 
     private static string ToBytes(string valueText, string unitText)
