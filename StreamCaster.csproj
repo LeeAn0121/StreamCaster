@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net9.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <Platforms>x86;x64</Platforms>
+    <AssemblyName>StreamCaster</AssemblyName>
+    <RootNamespace>StreamCaster</RootNamespace>
+    <AssemblyTitle>StreamCaster</AssemblyTitle>
+    <Product>StreamCaster</Product>
+    <Company>LeeAn</Company>
+    <Authors>LeeAn</Authors>
+    <Description>StreamCaster live streaming utility</Description>
+    <ApplicationIcon>assets\StreamCaster.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Resource Include="assets\StreamCaster.ico" />
+    <Resource Include="assets\StreamCaster.png" />
+    <EmbeddedResource Include="tools\ffmpeg.exe" LogicalName="StreamCaster.ffmpeg.exe" Condition="Exists('tools\ffmpeg.exe')" />
+  </ItemGroup>
+
+</Project>

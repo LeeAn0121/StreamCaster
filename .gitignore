@@ -1,0 +1,35 @@
+# Build output
+bin/
+obj/
+
+# Visual Studio / IDE
+.vs/
+.idea/
+.claude/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Rider / ReSharper
+_ReSharper*/
+*.DotSettings.user
+
+# Installer / release artifacts
+installer/*.exe
+bin/**/publish/
+bin/**/singlefile/
+
+# External bundled binaries
+tools/ffmpeg.exe
+
+# Logs / runtime data
+*.log
+logs/
+*.tmp
+*.temp
+
+# OS files
+.DS_Store
+Thumbs.db
+Desktop.ini
