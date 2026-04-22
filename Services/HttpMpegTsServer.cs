@@ -14,7 +14,7 @@ public sealed class HttpMpegTsServer : IDisposable
     private readonly object _sync = new();
     private readonly MemoryStream _startupBuffer = new();
 
-    private TcpListener? _listener;
+    private readonly List<TcpListener> _listeners = [];
     private Process? _process;
     private Task? _stdoutPumpTask;
     private readonly List<ClientConnection> _clients = [];
@@ -30,57 +30,95 @@ public sealed class HttpMpegTsServer : IDisposable
 
     public event Action<long>? BytesTransferred;
 
-    public async Task RunAsync(string executablePath, string ffmpegArguments, string targetAddress, CancellationToken cancellationToken)
+    public Task RunAsync(string executablePath, string ffmpegArguments, string targetAddress, CancellationToken cancellationToken)
     {
-        var endpoint = ParseEndpoint(targetAddress);
-        _listener = new TcpListener(endpoint.Address, endpoint.Port);
-        _listener.Start();
+        return RunAsync(executablePath, ffmpegArguments, [targetAddress], cancellationToken);
+    }
+
+    public async Task RunAsync(string executablePath, string ffmpegArguments, IReadOnlyList<string> targetAddresses, CancellationToken cancellationToken)
+    {
+        var endpoints = targetAddresses
+            .Where(address => !string.IsNullOrWhiteSpace(address))
+            .Select(ParseEndpoint)
+            .Distinct()
+            .ToList();
+
+        if (endpoints.Count == 0)
+        {
+            endpoints.Add(ParseEndpoint("127.0.0.1:7001/live"));
+        }
+
+        foreach (var endpoint in endpoints)
+        {
+            var listener = new TcpListener(endpoint.Address, endpoint.Port);
+            listener.Start();
+            _listeners.Add(listener);
+
+            LogReceived?.Invoke($"[http-server] Listening on http://{endpoint.DisplayHost}:{endpoint.Port}{endpoint.Path}");
+            PublishClientStatus(new HttpClientStatus(
+                0,
+                0,
+                "LISTENING",
+                endpoint.Path,
+                endpoint.DisplayHost,
+                endpoint.Port,
+                "-",
+                null,
+                DateTimeOffset.Now,
+                null,
+                $"[client] time={DateTimeOffset.Now:yyyy-MM-dd HH:mm:ss.fff} id=0000 action=LISTENING ip={endpoint.DisplayHost,-15} port={endpoint.Port} host=- path={endpoint.Path} active=0"));
+        }
 
         StatusChanged?.Invoke("Listening");
-        LogReceived?.Invoke($"[http-server] Listening on http://{endpoint.DisplayHost}:{endpoint.Port}{endpoint.Path}");
-        PublishClientStatus(new HttpClientStatus(
-            0,
-            0,
-            "LISTENING",
-            endpoint.Path,
-            endpoint.DisplayHost,
-            endpoint.Port,
-            "-",
-            null,
-            DateTimeOffset.Now,
-            null,
-            $"[client] time={DateTimeOffset.Now:yyyy-MM-dd HH:mm:ss.fff} id=0000 action=LISTENING ip={endpoint.DisplayHost,-15} port={endpoint.Port} host=- path={endpoint.Path} active=0"));
 
         await EnsureStreamingProcessAsync(executablePath, ffmpegArguments, cancellationToken);
 
         try
         {
-            while (!cancellationToken.IsCancellationRequested)
-            {
-                TcpClient client;
+            var acceptTasks = endpoints
+                .Select((endpoint, index) => AcceptLoopAsync(_listeners[index], endpoint, executablePath, ffmpegArguments, cancellationToken))
+                .ToArray();
 
-                try
-                {
-                    client = await _listener.AcceptTcpClientAsync(cancellationToken);
-                }
-                catch (OperationCanceledException)
-                {
-                    break;
-                }
-                catch (ObjectDisposedException) when (cancellationToken.IsCancellationRequested)
-                {
-                    break;
-                }
-
-                _ = Task.Run(() => HandleClientSessionAsync(client, endpoint, executablePath, ffmpegArguments, cancellationToken), cancellationToken);
-            }
+            await Task.WhenAll(acceptTasks);
         }
         finally
         {
-            _listener.Stop();
-            _listener = null;
+            foreach (var listener in _listeners)
+            {
+                listener.Stop();
+            }
+
+            _listeners.Clear();
             await StopStreamingProcessAsync();
             StatusChanged?.Invoke("Stopped");
+        }
+    }
+
+    private async Task AcceptLoopAsync(
+        TcpListener listener,
+        HttpListenEndpoint endpoint,
+        string executablePath,
+        string ffmpegArguments,
+        CancellationToken cancellationToken)
+    {
+        while (!cancellationToken.IsCancellationRequested)
+        {
+            TcpClient client;
+
+            try
+            {
+                client = await listener.AcceptTcpClientAsync(cancellationToken);
+            }
+            catch (OperationCanceledException)
+            {
+                break;
+            }
+            catch (ObjectDisposedException) when (cancellationToken.IsCancellationRequested)
+            {
+                break;
+            }
+
+            _ = Task.Run(() => HandleClientSessionAsync(client, endpoint, executablePath, ffmpegArguments, cancellationToken), cancellationToken);
         }
     }
 
@@ -662,8 +700,12 @@ public sealed class HttpMpegTsServer : IDisposable
 
     public void Dispose()
     {
-        _listener?.Stop();
-        _listener = null;
+        foreach (var listener in _listeners)
+        {
+            listener.Stop();
+        }
+
+        _listeners.Clear();
         _startupBuffer.Dispose();
 
         if (_process is not null)

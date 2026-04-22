@@ -6,10 +6,10 @@
         xmlns:converters="clr-namespace:StreamCaster.Converters"
         mc:Ignorable="d"
         Title="StreamCaster"
-        Width="900"
-        Height="820"
+        Width="960"
+        Height="900"
         MinWidth="820"
-        MinHeight="680"
+        MinHeight="760"
         WindowStartupLocation="CenterScreen"
         Background="{Binding WindowBackgroundBrush}">
     <Window.Icon>
@@ -21,46 +21,46 @@
         <converters:ProtocolBgColorConverter x:Key="ProtocolBgColor" />
 
         <Style TargetType="TextBlock">
-            <Setter Property="Foreground" Value="{Binding PrimaryTextBrush}" />
+            <Setter Property="Foreground" Value="{Binding DataContext.PrimaryTextBrush, RelativeSource={RelativeSource AncestorType=Window}}" />
         </Style>
         <Style x:Key="SectionTitleStyle" TargetType="TextBlock">
             <Setter Property="FontSize" Value="15" />
             <Setter Property="FontWeight" Value="Bold" />
-            <Setter Property="Foreground" Value="{Binding PrimaryTextBrush}" />
+            <Setter Property="Foreground" Value="{Binding DataContext.PrimaryTextBrush, RelativeSource={RelativeSource AncestorType=Window}}" />
         </Style>
         <Style x:Key="FieldLabelStyle" TargetType="TextBlock">
             <Setter Property="Margin" Value="0,0,0,5" />
-            <Setter Property="Foreground" Value="{Binding SecondaryTextBrush}" />
+            <Setter Property="Foreground" Value="{Binding DataContext.SecondaryTextBrush, RelativeSource={RelativeSource AncestorType=Window}}" />
             <Setter Property="FontSize" Value="11" />
             <Setter Property="FontWeight" Value="SemiBold" />
         </Style>
         <Style TargetType="TextBox">
-            <Setter Property="Foreground" Value="{Binding PrimaryTextBrush}" />
-            <Setter Property="Background" Value="{Binding InputBackgroundBrush}" />
-            <Setter Property="BorderBrush" Value="{Binding BorderBrushColor}" />
+            <Setter Property="Foreground" Value="{Binding DataContext.PrimaryTextBrush, RelativeSource={RelativeSource AncestorType=Window}}" />
+            <Setter Property="Background" Value="{Binding DataContext.InputBackgroundBrush, RelativeSource={RelativeSource AncestorType=Window}}" />
+            <Setter Property="BorderBrush" Value="{Binding DataContext.BorderBrushColor, RelativeSource={RelativeSource AncestorType=Window}}" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="Padding" Value="10,7" />
             <Setter Property="FontSize" Value="13" />
             <Setter Property="MinHeight" Value="34" />
         </Style>
         <Style TargetType="ComboBox">
-            <Setter Property="Foreground" Value="{Binding PrimaryTextBrush}" />
-            <Setter Property="Background" Value="{Binding InputBackgroundBrush}" />
-            <Setter Property="BorderBrush" Value="{Binding BorderBrushColor}" />
+            <Setter Property="Foreground" Value="{Binding DataContext.PrimaryTextBrush, RelativeSource={RelativeSource AncestorType=Window}}" />
+            <Setter Property="Background" Value="{Binding DataContext.InputBackgroundBrush, RelativeSource={RelativeSource AncestorType=Window}}" />
+            <Setter Property="BorderBrush" Value="{Binding DataContext.BorderBrushColor, RelativeSource={RelativeSource AncestorType=Window}}" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="Padding" Value="7,5" />
             <Setter Property="FontSize" Value="13" />
             <Setter Property="MinHeight" Value="34" />
         </Style>
         <Style TargetType="CheckBox">
-            <Setter Property="Foreground" Value="{Binding PrimaryTextBrush}" />
+            <Setter Property="Foreground" Value="{Binding DataContext.PrimaryTextBrush, RelativeSource={RelativeSource AncestorType=Window}}" />
             <Setter Property="FontSize" Value="13" />
             <Setter Property="VerticalAlignment" Value="Bottom" />
             <Setter Property="Margin" Value="0,0,0,7" />
         </Style>
         <Style x:Key="PrimaryButtonStyle" TargetType="Button">
-            <Setter Property="Foreground" Value="{Binding AccentTextBrush}" />
-            <Setter Property="Background" Value="{Binding AccentBrushColor}" />
+            <Setter Property="Foreground" Value="{Binding DataContext.AccentTextBrush, RelativeSource={RelativeSource AncestorType=Window}}" />
+            <Setter Property="Background" Value="{Binding DataContext.AccentBrushColor, RelativeSource={RelativeSource AncestorType=Window}}" />
             <Setter Property="FontSize" Value="13" />
             <Setter Property="FontWeight" Value="Bold" />
             <Setter Property="BorderThickness" Value="0" />
@@ -68,9 +68,9 @@
             <Setter Property="MinHeight" Value="34" />
         </Style>
         <Style x:Key="SecondaryButtonStyle" TargetType="Button">
-            <Setter Property="Foreground" Value="{Binding PrimaryTextBrush}" />
-            <Setter Property="Background" Value="{Binding SecondaryButtonBrush}" />
-            <Setter Property="BorderBrush" Value="{Binding BorderBrushColor}" />
+            <Setter Property="Foreground" Value="{Binding DataContext.PrimaryTextBrush, RelativeSource={RelativeSource AncestorType=Window}}" />
+            <Setter Property="Background" Value="{Binding DataContext.SecondaryButtonBrush, RelativeSource={RelativeSource AncestorType=Window}}" />
+            <Setter Property="BorderBrush" Value="{Binding DataContext.BorderBrushColor, RelativeSource={RelativeSource AncestorType=Window}}" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="FontSize" Value="13" />
             <Setter Property="FontWeight" Value="SemiBold" />
@@ -114,224 +114,325 @@
                 <ColumnDefinition Width="1*" />
                 <ColumnDefinition Width="1*" />
                 <ColumnDefinition Width="1*" />
-                <ColumnDefinition Width="1.5*" />
+                <ColumnDefinition Width="1*" />
             </Grid.ColumnDefinitions>
 
             <Border Grid.Column="0" Margin="0,0,8,0" Padding="12,10" CornerRadius="10"
                     Background="{Binding PanelBrushColor}" BorderBrush="{Binding BorderBrushColor}" BorderThickness="1">
                 <StackPanel>
-                    <TextBlock Foreground="{Binding SecondaryTextBrush}" FontSize="10" FontWeight="SemiBold" Text="BITRATE" />
-                    <TextBlock Margin="0,4,0,0" FontSize="16" FontWeight="Bold" Text="{Binding Stats.Bitrate}" />
+                    <TextBlock Foreground="{Binding SecondaryTextBrush}" FontSize="10" FontWeight="SemiBold" Text="TOTAL BANDWIDTH" />
+                    <TextBlock Margin="0,4,0,0" FontSize="16" FontWeight="Bold" Text="{Binding TotalBandwidthText}" />
                 </StackPanel>
             </Border>
             <Border Grid.Column="1" Margin="0,0,8,0" Padding="12,10" CornerRadius="10"
                     Background="{Binding PanelBrushColor}" BorderBrush="{Binding BorderBrushColor}" BorderThickness="1">
                 <StackPanel>
-                    <TextBlock Foreground="{Binding SecondaryTextBrush}" FontSize="10" FontWeight="SemiBold" Text="BYTES SENT" />
-                    <TextBlock Margin="0,4,0,0" FontSize="16" FontWeight="Bold" Text="{Binding Stats.BytesSent}" />
+                    <TextBlock Foreground="{Binding SecondaryTextBrush}" FontSize="10" FontWeight="SemiBold" Text="TOTAL PACKETS / SEC" />
+                    <TextBlock Margin="0,4,0,0" FontSize="16" FontWeight="Bold" Text="{Binding TotalPacketRateText}" />
                 </StackPanel>
             </Border>
             <Border Grid.Column="2" Margin="0,0,8,0" Padding="12,10" CornerRadius="10"
                     Background="{Binding PanelBrushColor}" BorderBrush="{Binding BorderBrushColor}" BorderThickness="1">
                 <StackPanel>
-                    <TextBlock Foreground="{Binding SecondaryTextBrush}" FontSize="10" FontWeight="SemiBold" Text="HTTP CLIENTS" />
-                    <TextBlock Margin="0,4,0,0" FontSize="16" FontWeight="Bold" Text="{Binding HttpClientSummary}" />
+                    <TextBlock Foreground="{Binding SecondaryTextBrush}" FontSize="10" FontWeight="SemiBold" Text="RUNNING SESSIONS" />
+                    <TextBlock Margin="0,4,0,0" FontSize="16" FontWeight="Bold" Text="{Binding RunningSessionSummary}" />
                 </StackPanel>
             </Border>
             <Border Grid.Column="3" Padding="12,10" CornerRadius="10"
                     Background="{Binding PanelBrushColor}" BorderBrush="{Binding BorderBrushColor}" BorderThickness="1">
                 <StackPanel>
-                    <TextBlock Foreground="{Binding SecondaryTextBrush}" FontSize="10" FontWeight="SemiBold" Text="CURRENT TARGET" />
-                    <TextBlock Margin="0,4,0,0" FontSize="12" FontWeight="Bold"
-                               Text="{Binding OutputPreview}" TextTrimming="CharacterEllipsis" />
+                    <TextBlock Foreground="{Binding SecondaryTextBrush}" FontSize="10" FontWeight="SemiBold" Text="TOTAL OUTPUTS" />
+                    <TextBlock Margin="0,4,0,0" FontSize="16" FontWeight="Bold" Text="{Binding TotalOutputSummary}" />
                 </StackPanel>
             </Border>
         </Grid>
 
-        <!-- Control Panel -->
+        <!-- Session Controls -->
         <Border Grid.Row="2"
                 Padding="16"
                 CornerRadius="12"
                 Background="{Binding PanelBrushColor}"
                 BorderBrush="{Binding BorderBrushColor}"
                 BorderThickness="1">
-            <StackPanel>
-                <TextBlock Style="{StaticResource SectionTitleStyle}" Text="Control" />
-                <TextBlock Margin="0,6,0,0"
-                           Foreground="{Binding SecondaryTextBrush}"
-                           FontSize="11"
-                           Text="{Binding EditLockStatusText}" />
-
-                <StackPanel IsEnabled="{Binding CanEditSettings}">
-                <!-- Input -->
-                <TextBlock Margin="0,12,0,5" Style="{StaticResource FieldLabelStyle}" Text="INPUT FILE" />
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    <TextBox Grid.Column="0" Text="{Binding InputPath, UpdateSourceTrigger=PropertyChanged}" />
-                    <Button Grid.Column="1" Margin="8,0,0,0" Content="Browse"
-                            Style="{StaticResource SecondaryButtonStyle}" Click="BrowseInput_Click" />
-                </Grid>
-
-                <!-- NIC + Protocol -->
-                <Grid Margin="0,10,0,0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1.4*" />
-                        <ColumnDefinition Width="0.9*" />
-                    </Grid.ColumnDefinitions>
-
-                    <StackPanel Margin="0,0,10,0">
-                        <TextBlock Style="{StaticResource FieldLabelStyle}" Text="NETWORK INTERFACE" />
-                        <ComboBox ItemsSource="{Binding NetworkInterfaces}" SelectedItem="{Binding SelectedNetworkInterface}" />
-                    </StackPanel>
-
-                    <StackPanel Grid.Column="1">
-                        <TextBlock Style="{StaticResource FieldLabelStyle}" Text="PROTOCOL" />
-                        <ComboBox ItemsSource="{Binding Protocols}" SelectedItem="{Binding SelectedProtocol}">
-                            <ComboBox.ItemTemplate>
-                                <DataTemplate>
-                                    <Border CornerRadius="5" Padding="10,3"
-                                            Background="{Binding Converter={StaticResource ProtocolBgColor}}"
-                                            HorizontalAlignment="Left">
-                                        <TextBlock Text="{Binding Converter={StaticResource ProtocolDisplay}}"
-                                                   Foreground="White" FontWeight="Bold" FontSize="12" />
-                                    </Border>
-                                </DataTemplate>
-                            </ComboBox.ItemTemplate>
-                        </ComboBox>
-                    </StackPanel>
-                </Grid>
-
-                <!-- Target Address -->
-                <StackPanel Margin="0,10,0,0">
-                    <TextBlock Style="{StaticResource FieldLabelStyle}" Text="TARGET ADDRESS  (예: 172.16.59.6:7001/live/live)" />
-                    <TextBox Text="{Binding TargetAddress, UpdateSourceTrigger=PropertyChanged}" />
-                </StackPanel>
-
-                <!-- Options Row -->
-                <Grid Margin="0,10,0,0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="100" />
-                        <ColumnDefinition Width="100" />
-                    </Grid.ColumnDefinitions>
-
-                    <StackPanel Grid.Column="0" Margin="0,0,12,0">
-                        <TextBlock Style="{StaticResource FieldLabelStyle}" Text="LOOP" />
-                        <CheckBox Content="Enable" IsChecked="{Binding LoopEnabled}" />
-                    </StackPanel>
-
-                    <StackPanel Grid.Column="1" Margin="0,0,8,0">
-                        <TextBlock Style="{StaticResource FieldLabelStyle}" Text="PKT SIZE" />
-                        <TextBox HorizontalContentAlignment="Center"
-                                 Text="{Binding PacketSize, UpdateSourceTrigger=PropertyChanged}" />
-                    </StackPanel>
-
-                    <StackPanel Grid.Column="2" Margin="0,0,12,0">
-                        <TextBlock Style="{StaticResource FieldLabelStyle}" Text="TTL" />
-                        <TextBox HorizontalContentAlignment="Center"
-                                 Text="{Binding Ttl, UpdateSourceTrigger=PropertyChanged}" />
-                    </StackPanel>
-                </Grid>
-                </StackPanel>
-
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,16,0,0">
-                    <Button Content="{Binding ToggleSessionButtonText}"
-                            Click="ToggleSession_Click"
-                            Style="{StaticResource PrimaryButtonStyle}"
-                            Background="{Binding ToggleSessionButtonBackground}"
-                            Foreground="{Binding ToggleSessionButtonForeground}" />
-                </StackPanel>
-            </StackPanel>
-        </Border>
-
-        <!-- Log Panel -->
-        <Border Grid.Row="3"
-                Margin="0,10,0,0"
-                Padding="14"
-                CornerRadius="12"
-                Background="{Binding PanelAltBrushColor}"
-                BorderBrush="{Binding BorderBrushColor}"
-                BorderThickness="1">
             <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Style="{StaticResource SectionTitleStyle}" Text="Status Log" />
-                    <TextBlock Grid.Column="1"
-                               Margin="12,2,0,0"
-                               Foreground="{Binding SecondaryTextBrush}"
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel>
+                    <TextBlock Style="{StaticResource SectionTitleStyle}" Text="Sessions" />
+                    <TextBlock Margin="0,6,0,0"
+                               Foreground="{Binding GlobalWarningBrush}"
                                FontSize="11"
-                               Text="{Binding StatusSummary}"
-                               TextTrimming="CharacterEllipsis" />
-                    <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right">
-                        <Button Margin="8,0,8,0"
-                                Content="Save Log"
-                                Style="{StaticResource SecondaryButtonStyle}"
-                                Click="SaveLog_Click" />
-                        <Button Content="Clear Log"
-                                Style="{StaticResource SecondaryButtonStyle}"
-                                Click="ClearLog_Click" />
-                    </StackPanel>
-                </Grid>
-                <Grid Grid.Row="1" Margin="0,8,0,0">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-                    <TextBlock Foreground="{Binding SecondaryTextBrush}"
-                               FontSize="11"
-                               Text="{Binding LogFileStatus}" />
-                    <Grid Grid.Row="1" Margin="0,8,0,0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <TextBox Grid.Column="0"
-                                 Text="{Binding LogFilterText, UpdateSourceTrigger=PropertyChanged}"
-                                 ToolTip="로그 필터"
-                                 />
-                        <Button Grid.Column="1" Margin="8,0,0,0"
-                                Content="All"
-                                Style="{StaticResource SecondaryButtonStyle}"
-                                Click="ShowAllLogs_Click" />
-                        <Button Grid.Column="2" Margin="8,0,0,0"
-                                Content="Client"
-                                Style="{StaticResource SecondaryButtonStyle}"
-                                Click="ShowClientLogs_Click" />
-                        <Button Grid.Column="3" Margin="8,0,0,0"
-                                Content="Error"
-                                Style="{StaticResource SecondaryButtonStyle}"
-                                Click="ShowErrorLogs_Click" />
-                    </Grid>
-                    <TextBox x:Name="LogTextBox"
-                             Grid.Row="2"
-                             Margin="0,6,0,0"
-                             IsReadOnly="True"
-                             Text="{Binding LogText}"
-                             AcceptsReturn="True"
-                             TextWrapping="Wrap"
-                             VerticalScrollBarVisibility="Auto"
-                             HorizontalScrollBarVisibility="Disabled"
-                             Background="{Binding CodeBackgroundBrush}"
-                             BorderBrush="{Binding BorderBrushColor}"
-                             Foreground="{Binding PrimaryTextBrush}"
-                             FontFamily="Consolas"
-                             FontSize="12" />
-                </Grid>
+                               FontWeight="SemiBold"
+                               Text="{Binding GlobalWarningText}"
+                               TextWrapping="Wrap" />
+                </StackPanel>
+                <Button Grid.Column="1"
+                        Content="Add Session"
+                        Style="{StaticResource PrimaryButtonStyle}"
+                        Click="AddSession_Click" />
             </Grid>
         </Border>
+
+        <ScrollViewer Grid.Row="3" Margin="0,10,0,0" VerticalScrollBarVisibility="Auto">
+            <ItemsControl ItemsSource="{Binding Sessions}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Margin="0,0,0,10"
+                                Padding="14"
+                                CornerRadius="12"
+                                Background="{Binding DataContext.PanelAltBrushColor, RelativeSource={RelativeSource AncestorType=Window}}"
+                                BorderBrush="{Binding DataContext.BorderBrushColor, RelativeSource={RelativeSource AncestorType=Window}}"
+                                BorderThickness="1">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel>
+                                        <TextBlock Style="{StaticResource SectionTitleStyle}" Text="{Binding Title}" />
+                                        <TextBlock Margin="0,4,0,0"
+                                                   Foreground="{Binding DataContext.SecondaryTextBrush, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                   FontSize="11"
+                                                   Text="{Binding StatusSummary}"
+                                                   TextWrapping="Wrap" />
+                                    </StackPanel>
+                                    <Button Grid.Column="1"
+                                            Margin="8,0,0,0"
+                                            Content="{Binding ToggleSessionButtonText}"
+                                            Tag="{Binding}"
+                                            Click="ToggleSession_Click"
+                                            Style="{StaticResource PrimaryButtonStyle}"
+                                            Background="{Binding ToggleSessionButtonBackground}"
+                                            Foreground="{Binding ToggleSessionButtonForeground}" />
+                                    <Button Grid.Column="2"
+                                            Margin="8,0,0,0"
+                                            Content="Remove"
+                                            Tag="{Binding}"
+                                            Click="RemoveSession_Click"
+                                            Style="{StaticResource SecondaryButtonStyle}" />
+                                </Grid>
+
+                                <Grid Grid.Row="1" Margin="0,10,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*" />
+                                        <ColumnDefinition Width="1*" />
+                                        <ColumnDefinition Width="1*" />
+                                        <ColumnDefinition Width="1*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Border Grid.Column="0" Margin="0,0,8,0" Padding="10,8" CornerRadius="8"
+                                            Background="{Binding DataContext.PanelBrushColor, RelativeSource={RelativeSource AncestorType=Window}}"
+                                            BorderBrush="{Binding DataContext.BorderBrushColor, RelativeSource={RelativeSource AncestorType=Window}}"
+                                            BorderThickness="1">
+                                        <StackPanel>
+                                            <TextBlock Foreground="{Binding DataContext.SecondaryTextBrush, RelativeSource={RelativeSource AncestorType=Window}}" FontSize="10" FontWeight="SemiBold" Text="BITRATE" />
+                                            <TextBlock Margin="0,4,0,0" FontSize="15" FontWeight="Bold" Text="{Binding Bitrate}" />
+                                        </StackPanel>
+                                    </Border>
+                                    <Border Grid.Column="1" Margin="0,0,8,0" Padding="10,8" CornerRadius="8"
+                                            Background="{Binding DataContext.PanelBrushColor, RelativeSource={RelativeSource AncestorType=Window}}"
+                                            BorderBrush="{Binding DataContext.BorderBrushColor, RelativeSource={RelativeSource AncestorType=Window}}"
+                                            BorderThickness="1">
+                                        <StackPanel>
+                                            <TextBlock Foreground="{Binding DataContext.SecondaryTextBrush, RelativeSource={RelativeSource AncestorType=Window}}" FontSize="10" FontWeight="SemiBold" Text="BYTES SENT" />
+                                            <TextBlock Margin="0,4,0,0" FontSize="15" FontWeight="Bold" Text="{Binding BytesSent}" />
+                                        </StackPanel>
+                                    </Border>
+                                    <Border Grid.Column="2" Margin="0,0,8,0" Padding="10,8" CornerRadius="8"
+                                            Background="{Binding DataContext.PanelBrushColor, RelativeSource={RelativeSource AncestorType=Window}}"
+                                            BorderBrush="{Binding DataContext.BorderBrushColor, RelativeSource={RelativeSource AncestorType=Window}}"
+                                            BorderThickness="1">
+                                        <StackPanel>
+                                            <TextBlock Foreground="{Binding DataContext.SecondaryTextBrush, RelativeSource={RelativeSource AncestorType=Window}}" FontSize="10" FontWeight="SemiBold" Text="BANDWIDTH / PPS" />
+                                            <TextBlock Margin="0,4,0,0" FontSize="15" FontWeight="Bold" Text="{Binding CurrentBandwidthText}" />
+                                            <TextBlock Margin="0,2,0,0" FontSize="11" FontWeight="SemiBold" Text="{Binding CurrentPacketRateText}" />
+                                        </StackPanel>
+                                    </Border>
+                                    <Border Grid.Column="3" Padding="10,8" CornerRadius="8"
+                                            Background="{Binding DataContext.PanelBrushColor, RelativeSource={RelativeSource AncestorType=Window}}"
+                                            BorderBrush="{Binding DataContext.BorderBrushColor, RelativeSource={RelativeSource AncestorType=Window}}"
+                                            BorderThickness="1">
+                                        <StackPanel>
+                                            <TextBlock Foreground="{Binding DataContext.SecondaryTextBrush, RelativeSource={RelativeSource AncestorType=Window}}" FontSize="10" FontWeight="SemiBold" Text="OUTPUTS / CLIENTS" />
+                                            <TextBlock Margin="0,4,0,0" FontSize="15" FontWeight="Bold" Text="{Binding OutputCountSummary}" />
+                                            <TextBlock Margin="0,2,0,0" FontSize="11" FontWeight="SemiBold" Text="{Binding HttpClientSummary}" />
+                                        </StackPanel>
+                                    </Border>
+                                </Grid>
+
+                                <StackPanel Grid.Row="2" Margin="0,10,0,0" IsEnabled="{Binding CanEditSettings}">
+                                    <TextBlock Style="{StaticResource FieldLabelStyle}" Text="INPUT FILE" />
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBox Grid.Column="0" Text="{Binding InputPath, UpdateSourceTrigger=PropertyChanged}" />
+                                        <Button Grid.Column="1"
+                                                Margin="8,0,0,0"
+                                                Content="Browse"
+                                                Tag="{Binding}"
+                                                Click="BrowseInput_Click"
+                                                Style="{StaticResource SecondaryButtonStyle}" />
+                                    </Grid>
+
+                                    <Grid Margin="0,10,0,0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="1.2*" />
+                                            <ColumnDefinition Width="0.8*" />
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="90" />
+                                            <ColumnDefinition Width="90" />
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Margin="0,0,10,0">
+                                            <TextBlock Style="{StaticResource FieldLabelStyle}" Text="NETWORK INTERFACE" />
+                                            <ComboBox ItemsSource="{Binding NetworkInterfaces}" SelectedItem="{Binding SelectedNetworkInterface}" />
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="1" Margin="0,0,10,0">
+                                            <TextBlock Style="{StaticResource FieldLabelStyle}" Text="PROTOCOL" />
+                                            <ComboBox ItemsSource="{Binding Protocols}" SelectedItem="{Binding SelectedProtocol}">
+                                                <ComboBox.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Border CornerRadius="5" Padding="10,3"
+                                                                Background="{Binding Converter={StaticResource ProtocolBgColor}}"
+                                                                HorizontalAlignment="Left">
+                                                            <TextBlock Text="{Binding Converter={StaticResource ProtocolDisplay}}"
+                                                                       Foreground="White" FontWeight="Bold" FontSize="12" />
+                                                        </Border>
+                                                    </DataTemplate>
+                                                </ComboBox.ItemTemplate>
+                                            </ComboBox>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="2" Margin="0,0,10,0">
+                                            <TextBlock Style="{StaticResource FieldLabelStyle}" Text="LOOP" />
+                                            <CheckBox Content="Enable" IsChecked="{Binding LoopEnabled}" />
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="3" Margin="0,0,8,0">
+                                            <TextBlock Style="{StaticResource FieldLabelStyle}" Text="PKT SIZE" />
+                                            <TextBox HorizontalContentAlignment="Center" Text="{Binding PacketSize, UpdateSourceTrigger=PropertyChanged}" />
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="4">
+                                            <TextBlock Style="{StaticResource FieldLabelStyle}" Text="TTL" />
+                                            <TextBox HorizontalContentAlignment="Center" Text="{Binding Ttl, UpdateSourceTrigger=PropertyChanged}" />
+                                        </StackPanel>
+                                    </Grid>
+
+                                    <StackPanel Margin="0,10,0,0">
+                                        <TextBlock Style="{StaticResource FieldLabelStyle}" Text="TARGET OUTPUTS  (한 줄에 하나씩 입력)" />
+                                        <TextBox Text="{Binding TargetAddressesText, UpdateSourceTrigger=PropertyChanged}"
+                                                 AcceptsReturn="True"
+                                                 TextWrapping="Wrap"
+                                                 VerticalScrollBarVisibility="Auto"
+                                                 MinHeight="88" />
+                                        <TextBlock Margin="0,6,0,0"
+                                                   Foreground="{Binding DataContext.SecondaryTextBrush, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                   FontSize="11"
+                                                   Text="{Binding TargetInputHintText}"
+                                                   TextWrapping="Wrap" />
+                                    </StackPanel>
+                                </StackPanel>
+
+                                <Border Grid.Row="3"
+                                        Margin="0,10,0,0"
+                                        Padding="10,8"
+                                        CornerRadius="8"
+                                        Background="{Binding DataContext.CodeBackgroundBrush, RelativeSource={RelativeSource AncestorType=Window}}"
+                                        BorderBrush="{Binding DataContext.BorderBrushColor, RelativeSource={RelativeSource AncestorType=Window}}"
+                                        BorderThickness="1">
+                                    <StackPanel>
+                                        <TextBlock Foreground="{Binding LoadWarningBrush}"
+                                                   FontSize="11"
+                                                   FontWeight="SemiBold"
+                                                   Text="{Binding LoadWarningText}"
+                                                   TextWrapping="Wrap" />
+                                        <TextBlock Margin="0,6,0,0"
+                                                   FontSize="11"
+                                                   FontWeight="SemiBold"
+                                                   Text="{Binding OutputPreview}"
+                                                   TextWrapping="Wrap" />
+                                    </StackPanel>
+                                </Border>
+
+                                <Border Grid.Row="4"
+                                        Margin="0,10,0,0"
+                                        Padding="12"
+                                        CornerRadius="10"
+                                        Background="{Binding DataContext.PanelBrushColor, RelativeSource={RelativeSource AncestorType=Window}}"
+                                        BorderBrush="{Binding DataContext.BorderBrushColor, RelativeSource={RelativeSource AncestorType=Window}}"
+                                        BorderThickness="1">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="*" />
+                                        </Grid.RowDefinitions>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Style="{StaticResource SectionTitleStyle}" Text="Session Log" />
+                                            <TextBlock Grid.Column="1"
+                                                       Margin="12,2,12,0"
+                                                       Foreground="{Binding DataContext.SecondaryTextBrush, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                       FontSize="11"
+                                                       Text="{Binding LogFileStatus}"
+                                                       TextTrimming="CharacterEllipsis" />
+                                            <Button Grid.Column="2"
+                                                    Margin="0,0,8,0"
+                                                    Content="Save Log"
+                                                    Tag="{Binding}"
+                                                    Style="{StaticResource SecondaryButtonStyle}"
+                                                    Click="SaveLog_Click" />
+                                        </Grid>
+                                        <Grid Grid.Row="1" Margin="0,8,0,0">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <TextBox Grid.Column="0" Text="{Binding LogFilterText, UpdateSourceTrigger=PropertyChanged}" />
+                                            <Button Grid.Column="1" Margin="8,0,0,0" Content="All" Tag="{Binding}" Style="{StaticResource SecondaryButtonStyle}" Click="ShowAllLogs_Click" />
+                                            <Button Grid.Column="2" Margin="8,0,0,0" Content="Client" Tag="{Binding}" Style="{StaticResource SecondaryButtonStyle}" Click="ShowClientLogs_Click" />
+                                            <Button Grid.Column="3" Margin="8,0,0,0" Content="Error" Tag="{Binding}" Style="{StaticResource SecondaryButtonStyle}" Click="ShowErrorLogs_Click" />
+                                            <Button Grid.Column="4" Margin="8,0,0,0" Content="Clear Log" Tag="{Binding}" Style="{StaticResource SecondaryButtonStyle}" Click="ClearLog_Click" />
+                                        </Grid>
+                                        <TextBox Grid.Row="3"
+                                                 Margin="0,8,0,0"
+                                                 MinHeight="180"
+                                                 IsReadOnly="True"
+                                                 Text="{Binding LogText}"
+                                                 AcceptsReturn="True"
+                                                 TextWrapping="Wrap"
+                                                 VerticalScrollBarVisibility="Auto"
+                                                 HorizontalScrollBarVisibility="Disabled"
+                                                 Background="{Binding DataContext.CodeBackgroundBrush, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                 BorderBrush="{Binding DataContext.BorderBrushColor, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                 Foreground="{Binding DataContext.PrimaryTextBrush, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                 FontFamily="Consolas"
+                                                 FontSize="12" />
+                                    </Grid>
+                                </Border>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
     </Grid>
 </Window>
